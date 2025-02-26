@@ -9,7 +9,7 @@ const authMiddleware = {
             if (!token) throw createError.Unauthorized('Access token required');
 
             if (isTokenBlacklisted(token)) {
-                throw createError.Unauthorized('Token has been revoked');
+                throw createError.Unauthorized('Token has been remoked');
             }
 
             const decoded = await jwt.verifyAccessToken(token);
