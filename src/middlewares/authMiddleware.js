@@ -1,26 +1,24 @@
-const jwt = require('../utils/jwt');
 const createError = require('http-errors');
-const { isTokenBlacklisted } = require('../utils/blacklist');
+const { isTokenBlacklisted } = require('../utils/blacklist')
+const jwt = require('../utils/jwt');
 
-const auth = async (req, res, next) => {
-    if (!req.headers.authorization) {
-        return next(createError.Unauthorized('Access token is required'));
-    }
-    const token = req.headers.authorization.split(' ')[1];
-    if (!token) {
-        return next(createError.Unauthorized());
-    }
+const authMiddleware = {
+    verifyToken: async (req, res, next) => {
+        try {
+            const token = req.headers.authorization?.split(' ')[1];
+            if (!token) throw createError.Unauthorized('Access token required');
 
-    if (isTokenBlacklisted(token)) {
-        return next(createError.Unauthorized('Token has been revoked. Please login again.'));
-    }
+            if (isTokenBlacklisted(token)) {
+                throw createError.Unauthorized('Token has been revoked');
+            }
 
-    await jwt.verifyAccessToken(token).then(user => {
-        req.user = user;
-        next();
-    }).catch(e => {
-        next(createError.Unauthorized(e.message));
-    });
+            const decoded = await jwt.verifyAccessToken(token);
+            req.user = decoded;
+            next();
+        } catch (error) {
+            next(error);
+        }
+    }
 };
 
-module.exports = auth;
+module.exports = authMiddleware;

@@ -20,8 +20,8 @@ model User {
   password      String
   photo_profile String?
   role          Role     @default(MEMBER)
-  division_id   String
-  division      Division @relation(fields: [division_id], references: [id])
+  division_id   String?
+  division      Division? @relation(fields: [division_id], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
