@@ -1,7 +1,8 @@
 const router = require("express").Router();
-const subcategoryController = require("../controllers/subcategoryController")
+const subcategoryController = require("../controllers/subcategoryController");
 
-router.get('/', subcategoryController.getAll)
-router.post('/', subcategoryController.createSubCategory)
+router.get("/", subcategoryController.getAll);
+router.get("/:id?", subcategoryController.getBySubCategory);
+router.post("/", subcategoryController.createSubCategory);
 
-module.exports = router
+module.exports = router;

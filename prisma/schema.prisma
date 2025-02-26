@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -21,9 +15,11 @@ model User {
   photo_profile String?
   role          Role      @default(MEMBER)
   division_id   String?
-  division      Division? @relation(fields: [division_id], references: [id])
+  division      Division? @relation(fields: [division_id], references: [id], map: "fk_division_id")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
+  @@map("users")
 }
 
 model Division {
@@ -32,46 +28,55 @@ model Division {
   users     User[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("divisions")
 }
 
 model Content {
-  id           String   @id @default(uuid())
-  title        String
-  description  String
-  imagePath    String
-  date_created DateTime @default(now())
-  tag_id       String
-  category_id  String
-  tag          Tag      @relation(fields: [tag_id], references: [id])
-  category     Category @relation(fields: [category_id], references: [id])
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              String      @id @default(uuid())
+  title           String
+  description     String
+  imagePath       String
+  createdAt       DateTime    @default(now())
+  tag_id          String?
+  sub_category_id String
+  tag             Tag?        @relation(fields: [tag_id], references: [id], map: "fk_tag_id")
+  subcategory     SubCategory @relation(fields: [sub_category_id], references: [id], map: "fk_subcategory_id")
+  updatedAt       DateTime    @updatedAt
+
+  @@map("contents")
 }
 
 model Category {
   id          String        @id @default(uuid())
   name        String
   subCategory SubCategory[]
-  contents    Content[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+
+  @@map("categories")
 }
 
 model SubCategory {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
   category_id String
-  category    Category @relation(fields: [category_id], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  category    Category  @relation(fields: [category_id], references: [id], map: "fk_category_id")
+  contents    Content[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("sub_categories")
 }
 
 model Tag {
   id        String    @id @default(uuid())
   name      String
-  content   Content[]
+  content   Content[] @relation(map: "fk_content_tag")
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  @@map("tags")
 }
 
 enum Role {

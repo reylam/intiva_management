@@ -12,12 +12,12 @@ const port = process.env.port;
 const host = process.env.host;
 
 app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.urlencoded({ extended: true }));
 app.use("/auth", authRoutes);
 app.use("/divisions", divisionRoutes);
 app.use("/category", categoryRoutes);
 app.use("/subcategory", subcategoryRoutes);
-app.use("/announce", announceRoutes);
+app.use("/announces", announceRoutes);
 app.use("/tag", tagRoutes);
 app.use(errorHandler);
 
