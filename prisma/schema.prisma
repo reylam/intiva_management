@@ -14,12 +14,68 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  name String
-  email String
-  profile String?
-  username String @unique
-  password String
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password      String
+  photo_profile String?
+  role          Role     @default(MEMBER)
+  division_id   String
+  division      Division @relation(fields: [division_id], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Division {
+  id    String @id @default(uuid())
+  name  String
+  users User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Content {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  imagePath    String
+  date_created DateTime @default(now())
+  tag_id       String
+  category_id  String
+  tag          Tag      @relation(fields: [tag_id], references: [id])
+  category     Category @relation(fields: [category_id], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Category {
+  id           String       @id @default(uuid())
+  name         String
+  subCategory  SubCategory[]
+  contents     Content[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SubCategory {
+  id          String   @id @default(uuid())
+  name        String
+  category_id String
+  category    Category @relation(fields: [category_id], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Tag {
+  id      String    @id @default(uuid())
+  name    String
+  content Content[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Role {
+  MEMBER
+  ADMIN
+  SUPER_ADMIN
 }
