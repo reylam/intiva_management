@@ -10,6 +10,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const tagRoutes = require("./routes/tagRoutes");
 const port = process.env.port;
 const host = process.env.host;
+const cors = require("cors");
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
@@ -20,6 +21,7 @@ app.use("/subcategory", subcategoryRoutes);
 app.use("/announces", announceRoutes);
 app.use("/tag", tagRoutes);
 app.use(errorHandler);
+app.use(cors());
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`berhasil cuy ${host}${port}`);

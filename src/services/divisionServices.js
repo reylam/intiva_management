@@ -7,7 +7,7 @@ class DivisionService {
   }
 
   static async getDivisionById(id) {
-    return await prisma.division.findUnique({ where: { id: Number(id) } });
+    return await prisma.division.findUnique({ where: { id: id } });
   }
 
   static async createDivision(data) {
@@ -23,6 +23,17 @@ class DivisionService {
 
   static async deleteDivision(id) {
     return await prisma.division.delete({ where: { id: Number(id) } });
+  }
+
+  static async getMembers(division_id) {
+    return await prisma.division.findUnique({
+      where: {
+        division_id: division_id,
+      },
+      include: {
+        users: true,
+      },
+    });
   }
 }
 

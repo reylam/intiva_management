@@ -10,7 +10,7 @@ async function main() {
   for (const name of divisions) {
     const existingDivision = await prisma.division.findFirst({
       where: { name },
-    }); 
+    });
 
     if (!existingDivision) {
       await prisma.division.create({ data: { name } });

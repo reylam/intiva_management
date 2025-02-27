@@ -24,6 +24,12 @@ const DivisionController = {
     }
   },
 
+  getUserByDivision: async (req, res, next) => {
+    try {
+      const { division_id } = req.user;
+    } catch (error) {}
+  },
+
   create: async (req, res, next) => {
     try {
       const { name } = req.body;
