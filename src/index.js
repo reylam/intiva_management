@@ -8,6 +8,7 @@ const announceRoutes = require("./routes/announceRoutes");
 const divisionRoutes = require("./routes/divisionRoutes");
 const errorHandler = require("./middlewares/errorHandler");
 const tagRoutes = require("./routes/tagRoutes");
+const userRoutes = require("./routes/usersRoutes");
 const port = process.env.port;
 const host = process.env.host;
 const cors = require("cors");
@@ -20,6 +21,7 @@ app.use("/category", categoryRoutes);
 app.use("/subcategory", subcategoryRoutes);
 app.use("/announces", announceRoutes);
 app.use("/tag", tagRoutes);
+app.use("/users", userRoutes);
 app.use(errorHandler);
 app.use(cors());
 

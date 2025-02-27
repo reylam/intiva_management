@@ -1,6 +1,7 @@
 const createError = require("http-errors");
 const { isTokenBlacklisted } = require("../utils/blacklist");
 const jwt = require("../utils/jwt");
+const prisma = require("../config/database");
 
 const authMiddleware = {
   verifyToken: async (req, res, next) => {
@@ -9,11 +10,17 @@ const authMiddleware = {
       if (!token) throw createError.Unauthorized("Access token required");
 
       if (isTokenBlacklisted(token)) {
-        throw createError.Unauthorized("Token has been remoked");
+        throw createError.Unauthorized("Token has been revoked");
       }
 
       const decoded = await jwt.verifyAccessToken(token);
-      req.user = decoded;
+      const user = await prisma.user.findUnique({
+        where: { id: decoded.id },
+      });
+
+      if (!user) throw createError.Unauthorized("User not found");
+
+      req.user = user;
       next();
     } catch (error) {
       next(error);
